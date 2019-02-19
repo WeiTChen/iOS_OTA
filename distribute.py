@@ -2,8 +2,8 @@ from biplist import *
 import os, zipfile, shutil
 
 # 预配置
-# url = 'https://192.168.21.102:8081/static'
-url = None
+url = 'https://192.168.21.102:8081/static'
+# url = None
 
 # 请勿修改
 ipa_path = None
@@ -31,7 +31,8 @@ def extract_info(cwd):
         ipa_file.extractall()
 
     payload_fp = cwd + '/Payload'
-    app_fp = '%s/%s.app' % (payload_fp, file_name)
+    app_file = os.listdir(payload_fp)[0]
+    app_fp = '%s/%s' % (payload_fp, app_file)
     img_fp = app_fp + '/AppIcon60x60@3x.png'
     plist_fp = app_fp + '/Info.plist'
     shutil.copy(img_fp, cwd)
@@ -43,8 +44,8 @@ def extract_info(cwd):
     print(bundle_id, display_name, version, sub_version)
     if not url:
         url = input("信息提取已完成，请输入URL路径")
-        if url[-1] != '/':
-            url += '/'
+    if url[-1] != '/':
+        url += '/'
     package = {'kind': 'software-package', 'url': url + file_name + '.ipa'}
     display_image = {'kind': 'display-image', 'url': url + 'AppIcon60x60@3x.png'}
     metadata = {'bundle-identifier': bundle_id, 'bundle-version': sub_version, 'kind': 'software',
